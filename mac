@@ -118,13 +118,10 @@ tap "universal-ctags/universal-ctags"
 
 # Unix
 brew "git"
-brew "neovim"
 brew "openssl"
-brew "parity"
 brew "rcm"
 brew "reattach-to-user-namespace"
 brew "ripgrep"
-brew "the_silver_searcher"
 brew "tmux"
 brew "universal-ctags", args: ["HEAD"]
 brew "vim"
@@ -141,6 +138,9 @@ brew "imagemagick"
 brew "libyaml" # should come after openssl
 brew "coreutils"
 brew "yarn"
+brew "rbenv"
+brew "ruby-build"
+brew "nodejs"
 
 # Spark recommended stuff
 brew "google-chrome"
@@ -153,18 +153,14 @@ brew "slack"
 # Databases
 brew "postgres", restart_service: :changed
 brew "redis", restart_service: :changed
-brew "rbenv"
-brew "ruby-build"
-brew "nodejs"
 EOF
 
+if [ -f "$HOME/comp-setup/laptop" ]; then
+  cp ~/comp-setup/laptop ~/.laptop.local
+fi
 
-# Ruby stuff
-
-# TODO - use scripting magic to grab official version from https://github.com/sprk/spark/blob/master/.ruby-version
-rbenv install 2.4.5
-rbenv rehash
-gem update --system
-gem i bundler
-number_of_cores=$(sysctl -n hw.ncpu)
-bundle config --global jobs $((number_of_cores - 1))
+if [ -f "$HOME/.laptop.local" ]; then
+  fancy_echo "Running your customizations from ~/.laptop.local ..."
+  # shellcheck disable=SC1090
+  . "$HOME/.laptop.local"
+fi
