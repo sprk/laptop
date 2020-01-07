@@ -12,12 +12,9 @@ Requirements
 
 We support:
 
-* macOS Mavericks (10.9)
-* macOS Yosemite (10.10)
-* macOS El Capitan (10.11)
-* macOS Sierra (10.12)
 * macOS High Sierra (10.13)
 * macOS Mojave (10.14)
+* macOS Catalina (10.15)
 
 Older versions may work but aren't regularly tested.
 Bug reports for older versions are welcome.
@@ -25,33 +22,146 @@ Bug reports for older versions are welcome.
 Install
 -------
 
-Download the script:
+Open Terminal and Install xcode select:
 
-```sh
-curl --remote-name https://raw.githubusercontent.com/sprk/laptop/master/mac
+`xcode-select --install`
+
+Create you SSH key and link to your Github Account:
+
+`ssh-keygen -C your.name@spark.re`
+
+Enter a location to save the save the key. Press enter
+to save it in the default location, or enter a new location.
+If you save it in the default location, all ssh connections
+will use this key by default. You should only need to save
+it in a non default location if you use multiple keys.
+
+`# Enter file in which to save the key (/Users/USERNAME/.ssh/id_rsa):`
+
+Can also keep it simple and just press enter when prompted for the above.
+
+Be sure to add a password to your key to ensure the
+security of our servers. This won't need to be a password
+you remember, as the ssh agent can remember it for you
+(see below). So that being said, the best course of action
+is to use a generated password through Dashlane.
+
+Set your identity in the SSH Config:
+This will fix an issue when running deployments where
+you get permission denied from Github, since our local private
+keys are used by Capistranto when pulling the code.
+
+```
+touch ~/.ssh/config
+echo 'UseKeychain yes' >> ~/.ssh/config
+echo 'AddKeysToAgent yes' >> ~/.ssh/config
+echo 'IdentityFile ~/.ssh/id_rsa' >> ~/.ssh/config
+```
+
+Add the new SSH key to your terminal instance to prevent need to enter SSH password:
+
+`ssh-add -K`
+
+Link your SSH key with your Github Account. First, copy the
+SSH key to your clipboard.
+
+`cat ~/.ssh/id_rsa.pub | pbcopy`
+
+Github > Profile > Settings > SSH and GPG Keys > New SSH key.
+
+Download the computer setup repository to your root directory and move the mac script there too:
+
+```
+cd ~ && git clone git@github.com:sprk/laptop.git
+cp ~/laptop/mac ~/mac
 ```
 
 Review the script (avoid running scripts you haven't read!):
-
-```sh
+```
 less mac
 ```
 
 Execute the downloaded script:
-
-```sh
+```
 sh mac 2>&1 | tee ~/laptop.log
 ```
 
 Optionally, review the log:
-
-```sh
+```
 less ~/laptop.log
 ```
 
-Optionally, [install thoughtbot/dotfiles][dotfiles].
+Once Script Completes
+---------------------
 
-[dotfiles]: https://github.com/thoughtbot/dotfiles#install
+In iTerm2:
+Preferences > Profile > Command:
+Send text at start: `ssh-add -K`
+
+In Terminal, let GitHub know who you are:
+
+```
+git config --global user.name "Your Name"
+git config --global user.email your.name@spark.re
+```
+
+**Important:**
+Your computer has been through a lot since running this script.
+Restart it and move onto the next step.
+
+Setup Rbenv, Ruby and Spark
+---------------------------
+
+```
+rbenv install 2.6.5
+rbenv global 2.6.5
+```
+
+Relaunch your terminal.
+
+```
+gem install bundler
+gem install rails
+rbenv rehash
+
+cd ~/Sites
+git clone git@github.com:sprk/spark.git
+cd spark
+```
+
+Note: If you want Spark to be installed a directory other than 'sites', the following will need to be updated:
+```
+In itermocil/spark.yml - (code ~/.itermocil/spark.yml)
+windows:
+  - name: Spark
+    root: ~/Sites/spark
+```
+```
+In zshrc - (zshconfig)
+# FOLDER ALIASES
+alias si='cd ~/Sites/Spark'
+```
+
+Create the master key and copy the variable that has been shared with
+you in the Dashlane "Sharing Center" under "Rails - Credentials Master Key"
+`touch config/master.key && open config/master.key`
+
+Populate your private variables in the zshrc private file:
+`open ~/.files/zshrc/private`
+`SPARK_SEED_ADMIN_EMAIL="first.lastname@spark.re"`
+
+Unless you have received an aws access key id and secret key, leave these variables as is.
+
+Setup your local database and put your computers username in the designated field.
+`cp config/settings.local.example.yml config/settings.local.yml`
+`open config/settings.local.yml`
+
+Ensure yarn is setup correctly.
+`yarn install --check-files`
+
+Create and Populate your local database:
+`rboot`
+
 
 Debugging
 ---------
@@ -82,7 +192,6 @@ Unix tools:
 * [Tmux] for saving project state and switching between projects
 * [Watchman] for watching for filesystem events
 * [Zsh] as your shell
-* [Neovim] as the one true editor(tm) that you may choose to ignore
 
 [Exuberant Ctags]: http://ctags.sourceforge.net/
 [Git]: https://git-scm.com/
@@ -91,7 +200,6 @@ Unix tools:
 [The Silver Searcher]: https://github.com/ggreer/the_silver_searcher
 [Tmux]: http://tmux.github.io/
 [Watchman]: https://facebook.github.io/watchman/
-[Neovim]: https://neovim.io/
 [RipGrep]: https://github.com/BurntSushi/ripgrep
 [Zsh]: http://www.zsh.org/
 
@@ -126,65 +234,31 @@ Databases:
 [Postgres]: http://www.postgresql.org/
 [Redis]: http://redis.io/
 
+Programs:
+* [Brave Browser] Like Google Chrome but with built in privacy / ad-blockers.
+* [Dashlane] our password management tool.
+* [Firefox] always good to have a secondary browser. Plus nice dev tools.
+* [iTerm2] your standard terminal... upgraded.
+* [Postman] for Spark API queries.
+* [PSequel] for checking out your local database.
+* [Slack] office communications/chat channels.
+* [VSCode] only code editor a sane person will ever need.
+
+[Brave Browser]: https://brave.com/
+[Dashlane]: https://www.dashlane.com/
+[Firefox]: https://www.mozilla.org/en-CA/firefox/
+[iTerm2]: https://iterm2.com/
+[Postman]: https://www.getpostman.com/
+[PSequel]: http://www.psequel.com/
+[Slack]: https://slack.com/intl/en-ca/
+[VSCode]: https://code.visualstudio.com/
+
 It should take less than 15 minutes to install (depends on your machine).
-
-Customize in `~/.laptop.local`
-------------------------------
-
-Your `~/.laptop.local` is run at the end of the Laptop script.
-Put your customizations there.
-For example:
-
-```sh
-#!/bin/sh
-
-brew bundle --file=- <<EOF
-brew "Caskroom/cask/dockertoolbox"
-brew "go"
-brew "ngrok"
-brew "watch"
-EOF
-
-default_docker_machine() {
-  docker-machine ls | grep -Fq "default"
-}
-
-if ! default_docker_machine; then
-  docker-machine create --driver virtualbox default
-fi
-
-default_docker_machine_running() {
-  default_docker_machine | grep -Fq "Running"
-}
-
-if ! default_docker_machine_running; then
-  docker-machine start default
-fi
-
-fancy_echo "Cleaning up old Homebrew formulae ..."
-brew cleanup
-brew cask cleanup
-
-if [ -r "$HOME/.rcrc" ]; then
-  fancy_echo "Updating dotfiles ..."
-  rcup
-fi
-```
-
-Write your customizations such that they can be run safely more than once.
-See the `mac` script for examples.
-
-Laptop functions such as `fancy_echo` and
-`gem_install_or_update`
-can be used in your `~/.laptop.local`.
-
-See the [wiki](https://github.com/thoughtbot/laptop/wiki)
-for more customization examples.
 
 Contributing
 ------------
 
-Edit the `mac` file.
+Edit the `laptop` file.
 Document in the `README.md` file.
 Follow shell style guidelines by using [ShellCheck] and [Syntastic].
 
@@ -195,7 +269,7 @@ brew install shellcheck
 [ShellCheck]: http://www.shellcheck.net/about.html
 [Syntastic]: https://github.com/scrooloose/syntastic
 
-Thank you, !
+Thank you!
 
 Spark fork maintainers (you!) + original [contributors]
 [contributors]: https://github.com/thoughtbot/laptop/graphs/contributors
