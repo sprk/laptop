@@ -141,16 +141,14 @@ brew "imagemagick"
 brew "libyaml" # should come after openssl
 brew "coreutils"
 brew "yarn"
-cask "gpg-suite"
 
 # Spark recommended stuff
-brew "postman"
-brew "slack" 
 brew "google-chrome"
 brew "dashlane"
-brew "psequel"
+brew "postman"
 brew "iterm2"
-brew "dashlane"
+brew "psequel"
+brew "slack"
 
 # Databases
 brew "postgres", restart_service: :changed
@@ -170,4 +168,3 @@ gem update --system
 gem i bundler
 number_of_cores=$(sysctl -n hw.ncpu)
 bundle config --global jobs $((number_of_cores - 1))
-
