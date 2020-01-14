@@ -144,8 +144,8 @@ brew "postgres", restart_service: :changed
 brew "redis", restart_service: :changed
 EOF
 
-if [ -f "$HOME/comp-setup/laptop" ]; then
-  cp ~/comp-setup/laptop ~/.laptop.local
+if [ -f "$HOME/laptop/laptop" ]; then
+  cp ~/laptop/laptop ~/.laptop.local
 fi
 
 if [ -f "$HOME/.laptop.local" ]; then
