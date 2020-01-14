@@ -107,13 +107,11 @@ if brew list | grep -Fq brew-cask; then
   brew uninstall --force brew-cask
 fi
 
-fancy_echo "Updating Homebrew formulae ..."
+fancy_echo "Updating Homebrew ..."
 brew update --force # https://github.com/Homebrew/brew/issues/1151
 brew bundle --file=- <<EOF
-tap "caskroom/cask"
-tap "d12frosted/emacs-plus"
-tap "homebrew/services"
 tap "thoughtbot/formulae"
+tap "homebrew/services"
 tap "universal-ctags/universal-ctags"
 
 # Unix
@@ -140,15 +138,6 @@ brew "coreutils"
 brew "yarn"
 brew "rbenv"
 brew "ruby-build"
-brew "nodejs"
-
-# Spark recommended stuff
-brew "google-chrome"
-brew "dashlane"
-brew "postman"
-brew "iterm2"
-brew "psequel"
-brew "slack"
 
 # Databases
 brew "postgres", restart_service: :changed

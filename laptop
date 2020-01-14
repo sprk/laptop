@@ -46,9 +46,6 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 
 git clone git@github.com:sprk/spark-tools.git
 mv ~/spark-tools/dotfiles ~/.files
-append_to_file "$HOME/.files/zshrc/private" 'export AWS_ACCESS_KEY_ID=""'
-append_to_file "$HOME/.files/zshrc/private" 'export AWS_SECRET_ACCESS_KEY=""'
-append_to_file "$HOME/.files/zshrc/private" 'export SPARK_SEED_ADMIN_EMAIL="firstname.lastname@spark.re"'
 
 ln -nsf ~/.files/itermocil ~/.itermocil
 ln -nsf ~/.files/zshrc/.zshrc ~/.zshrc
@@ -69,6 +66,7 @@ brew doctor
 # rbenv global 2.6.5
 # rbenv rehash
 # gem install bundler
+# gem install rails
 
 # fancy_echo '...Finished Ruby installation checks.'
 
