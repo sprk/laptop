@@ -44,7 +44,7 @@ fancy_echo "Installing itermocil, Oh My Zsh and dotfiles"
 brew install TomAnthony/brews/itermocil
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
-git clone git@github.com:sprk/spark-tools.git
+git clone --single-branch --branch dotfile-setup git@github.com:sprk/spark-tools.git
 mv ~/spark-tools/dotfiles ~/.files
 
 ln -nsf ~/.files/itermocil ~/.itermocil
